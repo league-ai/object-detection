@@ -1,0 +1,14 @@
+# train and val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
+train: ../datasets/bootstrap_output/train.txt
+val: ../datasets/bootstrap_output/test.txt
+test: ../datasets/bootstrap_output/test.txt
+
+#train: ./coco/train2017.txt  # 118287 images
+#val: ./coco/val2017.txt  # 5000 images
+#test: ./coco/test-dev2017.txt  # 20288 of 40670 images, submit to https://competitions.codalab.org/competitions/20794
+
+# number of classes
+nc: 6
+
+# class names
+names: [ 'red_tower', 'red_cannon', 'red_caster', 'red_melee', 'garen', 'garen_dv']
