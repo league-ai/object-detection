@@ -13,6 +13,16 @@ Implementation of paper - [YOLOv7: Trainable bag-of-freebies sets new state-of-t
     </a>
 </div>
 
+## LeagueAI
+Train:
+``` shell
+python train.py --workers 8 --device 0 --batch-size 10 --data data/leagueai.yaml --img 640 640 --cfg cfg/training/leagueai.yaml --weights 'yolov7_training.pt' --name leagueai --hyp data/hyp.transfer.p5.leagueai.yaml --epochs 10
+```
+Test on a picture:
+``` shell
+python detect.py --weights runs/train/leagueai/weights/best.pt --conf 0.25 --img-size 640 --source ../datasets/bootstrap_output/images/2500.jpg
+
+```
 ## Web Demo
 
 - Integrated into [Huggingface Spaces 🤗](https://huggingface.co/spaces/akhaliq/yolov7) using Gradio. Try out the Web Demo [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/akhaliq/yolov7)
