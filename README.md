@@ -20,9 +20,14 @@ python train.py --workers 8 --device 0 --batch-size 10 --data data/leagueai.yaml
 ```
 Test on a picture:
 ``` shell
-python detect.py --weights runs/train/leagueai/weights/best.pt --conf 0.25 --img-size 640 --source ../datasets/bootstrap_output/images/2500.jpg
+python detect.py --weights runs/train/leagueai/weights/best.pt --conf 0.8 --img-size 1280 --source ../datasets/bootstrap_output/images/2500.jpg
 
 ```
+Test on a video
+```
+python detect.py --weights runs/train/leagueai/weights/best.pt --conf 0.8 --img-size 1280 --source yourvideo.mp4
+```
+
 ## Web Demo
 
 - Integrated into [Huggingface Spaces 🤗](https://huggingface.co/spaces/akhaliq/yolov7) using Gradio. Try out the Web Demo [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/akhaliq/yolov7)
