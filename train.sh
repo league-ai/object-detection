@@ -5,7 +5,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --output=train_garen.out
 #SBATCH --cpus-per-task=8
-#SBATCH --constraint='pascal|volta'
+#SBATCH --constraint='volta'
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=oliver.struckmeier@aalto.fi
 source /scratch/work/strucko1/virtualenvs/leagueai/bin/activate
