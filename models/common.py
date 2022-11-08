@@ -15,10 +15,8 @@ from torch.cuda import amp
 try:
     from utils.datasets import letterbox
     from utils.general import non_max_suppression, make_divisible, scale_coords, increment_path, xyxy2xywh
-    p
     from utils.plots import color_list, plot_one_box
     from utils.torch_utils import time_synchronized
-
 except:
     print("Warning did not load something in models.common.py")
 
