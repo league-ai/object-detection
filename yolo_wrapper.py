@@ -76,8 +76,13 @@ class Detector:
                         #    'x_min':xyxy[0], 'y_min':xyxy[1], 'x_max':xyxy[2], 'y_max':xyxy[3]})
                     dets.append(det)
             if show_detection:
+                img0 = cv2.resize(img0, (int(img0.shape[1]/3),int(img0.shape[0]/3)))
                 cv2.imshow("ARST", img0)
                 cv2.waitKey(1)
+                # Show the AI view, rescale to output size
+            if (cv2.waitKey(10) & 0xFF == ord('q')):
+                cv2.destroyAllWindows()
+                exit()
             return dets
 
 
