@@ -12,7 +12,7 @@ from models.experimental_simple import attempt_load
 
 from utils.general import check_img_size, check_requirements, check_imshow, non_max_suppression, \
         apply_classifier, scale_coords, xyxy2xywh, strip_optimizer, set_logging, increment_path
-from utils.plots import plot_one_box
+from utils.plots import plot_one_box, plot_center
 from utils.datasets import letterbox
 from utils.torch_utils import select_device, load_classifier, time_synchronized, TracedModel
 
@@ -67,22 +67,30 @@ class Detector:
             dets = []
             for i, det in enumerate(pred):
                 if len(det):
+                    det_new = np.zeros((det.shape[0], det.shape[1]+2), dtype=float)
                     det[:, :4] = scale_coords(img.shape[2:], det[:, :4], img0.shape).round()
+                    det_new[:, :4] = det.cpu().numpy()[:, :4]
+                    det_new[:, 4] = det_new[:, 0] + (det_new[:, 2] - det_new[:, 0]) / 2
+                    det_new[:, 5] = det_new[:, 1] + (det_new[:, 3] - det_new[:, 1]) / 2
+                    det_new[:, 6:] = det.cpu().numpy()[:, 4:]
                     if show_detection:
-                        for *xyxy, conf, cls in reversed(det):
+                        for *xyxy,cx, cy, conf, cls in reversed(det_new):
                             label = f'{self.names[int(cls)]} {conf:.2f}'
                             plot_one_box(xyxy, img0, label=label, color=self.colors[int(cls)], line_thickness=1)
+                            plot_center(cx, cy, img0, color=self.colors[int(cls)])
                         #dets.append({'class':cls.item(), 'label':self.names[int(cls)], 'conf':round(conf.item(), 2),
                         #    'x_min':xyxy[0], 'y_min':xyxy[1], 'x_max':xyxy[2], 'y_max':xyxy[3]})
-                    dets.append(det)
+                    dets.append(det_new)
             if show_detection:
-                img0 = cv2.resize(img0, (int(img0.shape[1]/3),int(img0.shape[0]/3)))
-                cv2.imshow("ARST", img0)
-                cv2.waitKey(1)
                 # Show the AI view, rescale to output size
-            if (cv2.waitKey(10) & 0xFF == ord('q')):
-                cv2.destroyAllWindows()
-                exit()
-            return dets
+                img0 = cv2.resize(img0, (int(img0.shape[1]/2),int(img0.shape[0]/2)))
+                cv2.imshow("AI vision", img0)
+                cv2.waitKey(1)
+            # Returns a list of detections in format [x_min, y_min, x_max, y_max, conf, class]
+            try:
+                return np.array(dets)[0]
+            except:
+                print("Warning did not detect anything!")
+                return None
 
 
