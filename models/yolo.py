@@ -578,7 +578,7 @@ class Model(nn.Module):
         self.info()
         logger.info('')
 
-    def forward(self, x, augment=False, profile=False):
+    def forward(self, x, return_embedding=False, augment=False, profile=False):
         if augment:
             img_size = x.shape[-2:]  # height, width
             s = [1, 0.83, 0.67]  # scales
@@ -596,11 +596,15 @@ class Model(nn.Module):
                 y.append(yi)
             return torch.cat(y, 1), None  # augmented inference, train
         else:
-            return self.forward_once(x, profile)  # single-scale inference, train
+            return self.forward_once(x, return_embedding, profile)  # single-scale inference, train
 
-    def forward_once(self, x, profile=False):
+    def forward_once(self, x, return_embedding=False, profile=False):
         y, dt = [], []  # outputs
+        i = 0
         for m in self.model:
+            if i >= 48 and return_embedding:
+                break
+            i += 1
             if m.f != -1:  # if not from previous layer
                 x = y[m.f] if isinstance(m.f, int) else [x if j == -1 else y[j] for j in m.f]  # from earlier layers
 
@@ -625,6 +629,9 @@ class Model(nn.Module):
             x = m(x)  # run
             
             y.append(x if m.i in self.save else None)  # save output
+
+        if return_embedding:
+            return y[47]
 
         if profile:
             print('%.1fms total' % sum(dt))

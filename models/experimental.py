@@ -71,7 +71,7 @@ class Ensemble(nn.ModuleList):
     def __init__(self):
         super(Ensemble, self).__init__()
 
-    def forward(self, x, augment=False):
+    def forward(self, x, embeddings=False, augment=False):
         y = []
         for module in self:
             y.append(module(x, augment)[0])
