@@ -32,7 +32,7 @@ class Detector:
             self.model = attempt_load(weights, map_location=self.device)  # load FP32 model
             self.stride = int(self.model.stride.max())  # model stride
             self.img_size = check_img_size(img_size, s=self.stride)  # check img_size
-            trace=True
+            trace=False
             if trace:
                 self.model = TracedModel(self.model, self.device, self.img_size)
             if self.half:
@@ -41,11 +41,29 @@ class Detector:
             self.names = self.model.module.names if hasattr(self.model, 'module') else self.model.names
             self.colors = [[random.randint(0, 255) for _ in range(3)] for _ in self.names]
 
+    def get_embedding(self, img):
+        with torch.no_grad():
+            # Padded resize
+            img = letterbox(img, self.img_size, stride=self.stride)[0]
+            img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB, to 3x416x416
+            img = np.ascontiguousarray(img)
+
+            # Convert to tesor
+            img = torch.from_numpy(img).to(self.device)
+            img = img.half() if self.half else img.float()  # uint8 to fp16/32
+            img /= 255.0  # 0 - 255 to 0.0 - 1.0
+            if img.ndimension() == 3:
+                img = img.unsqueeze(0)
+            pred = self.model(img, return_embedding=True)
+            return pred
+
     def detect(self, img0, conf, show_detection):
         with torch.no_grad():
             # Run inference
+            """
             if self.device.type != 'cpu':
                 self.model(torch.zeros(1, 3, self.img_size, self.img_size).to(self.device).type_as(next(self.model.parameters())))  # run once
+            """
             old_img_w = old_img_h = self.img_size
             old_img_b = 1
 
@@ -60,7 +78,7 @@ class Detector:
             img /= 255.0  # 0 - 255 to 0.0 - 1.0
             if img.ndimension() == 3:
                 img = img.unsqueeze(0)
-            pred = self.model(img, augment=False)[0]
+            pred = self.model(img, return_embedding=False, augment=False)[0]
 
             # Apply NMS
             pred = non_max_suppression(pred, conf, 0.45, classes=None, agnostic=False)
