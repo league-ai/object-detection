@@ -1,0 +1,9 @@
+train: /scratch/work/strucko1/LeagueAI/minimap-detection-dataset-generation/out/yuumi/train.txt
+val: /scratch/work/strucko1/LeagueAI/minimap-detection-dataset-generation/out/yuumi/test.txt
+test: /scratch/work/strucko1/LeagueAI/minimap-detection-dataset-generation/out/yuumi/test.txt
+
+# number of classes
+nc: 1
+
+# class names
+names: ['YuumiAttached']
