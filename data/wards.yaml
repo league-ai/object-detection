@@ -1,0 +1,9 @@
+train: /scratch/work/strucko1/LeagueAI/minimap-detection-dataset-generation/out/minimap/train.txt
+val: /scratch/work/strucko1/LeagueAI/minimap-detection-dataset-generation/out/minimap/test.txt
+test: /scratch/work/strucko1/LeagueAI/minimap-detection-dataset-generation/out/minimap/test.txt
+
+# number of classes
+nc: 5
+
+# class names
+names: ['full', 'low', 'enemy', 'pink_ally', 'pink_enemy']
