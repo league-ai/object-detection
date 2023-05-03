@@ -14,7 +14,7 @@ from utils.general import check_img_size, check_requirements, check_imshow, non_
         apply_classifier, scale_coords, xyxy2xywh, strip_optimizer, set_logging, increment_path
 from utils.plots import plot_one_box, plot_center
 from utils.datasets import letterbox
-from utils.torch_utils import select_device, load_classifier, time_synchronized, TracedModel
+from utils.torch_utils import load_classifier, time_synchronized, TracedModel
 
 class Detector:
     def __init__(self, weights, img_size, device):
@@ -24,8 +24,9 @@ class Detector:
             set_logging()
 
             # Initialize Device and Precision
+            # for some reason this print statement is needed
             print(torch.cuda.is_available())
-            self.device = select_device(device)
+            self.device = torch.device('cuda:0' if device=='cuda' else 'cpu')
             self.half = self.device.type != 'cpu'  # half precision only supported on CUDA
 
             # Load model
