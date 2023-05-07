@@ -109,7 +109,7 @@ class Detector:
             try:
                 return np.array(dets)[0]
             except:
-                print("Warning did not detect anything!")
+                #print("Warning did not detect anything!")
                 return None
 
 
